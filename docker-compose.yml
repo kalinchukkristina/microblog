@@ -8,9 +8,9 @@ services:
     networks:
       - microblog-network
 
-  microblog:
+  prod:
     container_name: microblog
-    image: microblog:1.0.1-prod
+    image: microblog:prod
     ports:
       - "8000:5000"
     env_file:
@@ -19,6 +19,13 @@ services:
       - microblog-network
     depends_on:
       - mysql
+
+  test:
+    container_name: microblog-test
+    image: microblog-test:1.0.0
+    volumes:
+      - "./app:/microblog/app"
+      - "./tests:/microblog/tests"
 
 networks:
   microblog-network:
