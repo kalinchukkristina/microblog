@@ -1,12 +1,11 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
-name: Python application
+name: Pytest
 
 on:
   push:
-    branches:
-      - master
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,15 +13,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Docker
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-
-      - name: Build and run tests
+          
+      - name: Install dependencies
         run: |
-          docker-compose up test
-          docker-compose down
+            python -m pip install --upgrade pip
+            pip install -r requirments/test.txt
+            apt-get install make
+
+      - name: Running Tests
+        run: |
+            make test
