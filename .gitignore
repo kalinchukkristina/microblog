@@ -1,4 +1,6 @@
 .env
+.env.prod
+.env.test
 app.db
 aws_keys.yml
 logs/

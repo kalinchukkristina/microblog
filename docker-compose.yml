@@ -26,6 +26,16 @@ services:
     volumes:
       - "./app:/microblog/app"
       - "./tests:/microblog/tests"
+    environment:
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+    networks:
+      - microblog-network
+    depends_on:
+      - mysql
 
 networks:
   microblog-network:
