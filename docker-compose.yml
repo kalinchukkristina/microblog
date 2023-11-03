@@ -10,7 +10,7 @@ services:
 
   prod:
     container_name: microblog
-    image: microblog:prod
+    image: kristinakalinchuk/microblog:prod
     ports:
       - "8000:5000"
     env_file:
@@ -22,16 +22,12 @@ services:
 
   test:
     container_name: microblog-test
-    image: microblog-test:1.0.0
+    image: kristinakalinchuk/microblog-test:1.0.0
     volumes:
       - "./app:/microblog/app"
       - "./tests:/microblog/tests"
-    environment:
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - SECRET_KEY=${SECRET_KEY}
-      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env.test
     networks:
       - microblog-network
     depends_on:
