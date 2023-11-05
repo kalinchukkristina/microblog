@@ -22,7 +22,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Extract the version tag from release
-        if: ${{ github.event_name == 'release' }}
         run: echo "VERSION=$(echo ${{ github.event.release.tag_name }} | sed 's/^v//')" >> $GITHUB_ENV
 
       - name: Build and Push Docker Image Test
