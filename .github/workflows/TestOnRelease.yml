@@ -1,4 +1,4 @@
-name: Pytest Release
+name: Test On Release
 
 on:
   release:
