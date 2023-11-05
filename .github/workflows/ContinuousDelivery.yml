@@ -2,40 +2,46 @@ name: Publish Docker Images
 
 on:
   release:
-    types:
-      - published
+    types: [published]
   workflow_run:
     workflows: ["Pytest"]
-    types:
-      - completed
-    branches:
-      - master
-
+    types: [completed]
+    branches: [master]
 
 jobs:
-  build:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  build-and-push:
+    if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-    - name: Login to Docker Hub
-      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Extract the version tag
-      run: echo "VERSION=$(echo ${{ github.event.release.tag_name }} | sed 's/^v//')" >> $GITHUB_ENV
-      
-    - name: Build and Push Docker Image Test
-      run: |
-        docker build -t kristinakalinchuk/microblog-test:${{ env.VERSION }} -f docker/Dockerfile_test .
-        docker push kristinakalinchuk/microblog-test:${{ env.VERSION }}
+      - name: Extract the version tag from release
+        if: ${{ github.event_name == 'release' }}
+        run: echo "VERSION=$(echo ${{ github.event.release.tag_name }} | sed 's/^v//')" >> $GITHUB_ENV
 
-    - name: Build and Push Docker Images Prod App
-      run: |
-        docker build -t kristinakalinchuk/microblog:${{ env.VERSION }} -f docker/Dockerfile_prod .
-        docker push kristinakalinchuk/microblog:${{ env.VERSION }}
+      - name: Build and Push Docker Image Test
+        run: |
+          docker build -t kristinakalinchuk/microblog-test:${{ env.VERSION }} -f docker/Dockerfile_test .
+          docker push kristinakalinchuk/microblog-test:${{ env.VERSION }}
 
-    env:
-      DOCKER_CLI_AK: true
+      - name: Build and Push Docker Images Prod App
+        run: |
+          docker build -t kristinakalinchuk/microblog:${{ env.VERSION }} -f docker/Dockerfile_prod .
+          docker push kristinakalinchuk/microblog:${{ env.VERSION }}
+
+  build-and-push-on-workflow:
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      # Additional steps will be needed to determine the VERSION when triggered by workflow_run
+      # This could involve using git tags, commits, or another strategy to define the version
