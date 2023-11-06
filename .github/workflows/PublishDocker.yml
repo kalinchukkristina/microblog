@@ -1,13 +1,14 @@
 name: Publish Docker
 
 on:
-  workflow_run:
-    workflows: ["Test On Release"]
+  release:
     types:
-      - completed
+      - published
   workflow_dispatch:
 
 jobs:
+  tests:
+    uses: ./.github/workflows/AppTest.yml
   publish-docker:
     runs-on: ubuntu-latest
 
