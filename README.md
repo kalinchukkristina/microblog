@@ -1,6 +1,6 @@
 # Testing
 
-[![Pytest](https://github.com/kalinchukkristina/microblog/actions/workflows/app-test.yml/badge.svg?branch=master)](https://github.com/kalinchukkristina/microblog/actions/workflows/app-test.yml)
+[![Pytest](https://github.com/kalinchukkristina/microblog/actions/workflows/AppTest.yml/badge.svg)](https://github.com/kalinchukkristina/microblog/actions/workflows/AppTest.yml)
 
 # Microblog
 
