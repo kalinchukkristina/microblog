@@ -1,37 +1,43 @@
 version: "3"
 services:
-  mysql:
-    container_name: mysql
-    image: mysql/mysql-server:5.7
-    env_file:
-      - .env.prod
-    networks:
-      - microblog-network
+    mysql:
+        container_name: mysql
+        image: mysql/mysql-server:5.7
+        volumes:
+            - mysql-data:/var/lib/mysql
+        env_file:
+            - .env.prod
+        networks:
+            - microblog-network
 
-  prod:
-    container_name: microblog
-    image: kristinakalinchuk/microblog:0.1.0
-    ports:
-      - "8000:5000"
-    env_file:
-      - .env.prod
-    networks:
-      - microblog-network
-    depends_on:
-      - mysql
+    prod:
+        container_name: microblog
+        image: kristinakalinchuk/microblog:0.1.0
+        ports:
+            - "8000:5000"
+        env_file:
+            - .env.prod
+        networks:
+            - microblog-network
+        depends_on:
+            - mysql
 
-  test:
-    container_name: microblog-test
-    image: kristinakalinchuk/microblog-test:0.1.0
-    volumes:
-      - "./app:/microblog/app"
-      - "./tests:/microblog/tests"
-    env_file:
-      - .env.test
-    networks:
-      - microblog-network
-    depends_on:
-      - mysql
+    test:
+        container_name: microblog-test
+        image: kristinakalinchuk/microblog-test:0.1.0
+        volumes:
+            - "./app:/microblog/app"
+            - "./tests:/microblog/tests"
+        env_file:
+            - .env.test
+        networks:
+            - microblog-network
+        depends_on:
+            - mysql
 
 networks:
-  microblog-network:
+    microblog-network:
+
+volumes:
+    mysql-data:
+        driver: local
