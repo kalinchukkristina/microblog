@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
-## [1.0.1] - 2023-11-05
+## [0.1.0] - 2023-11-05
 
 ### Added
 
@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changelog file
 - Commit template
 
-### Fixed
+## [0.2.] - 2023-11-08
 
--
+### Added
+
+- Followers Functionality 
+- Unittests For Followers
