@@ -52,6 +52,19 @@
         state: present
         validate: '/usr/sbin/visudo -cf %s' # kan få fel med line "{{ server_user }} testing"
 
+-   name: Update GSSAPIAuthentication
+    lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: present
+        validate: '/usr/sbin/sshd -T -f %s' # kan få fel med line "PermitRootLogin testing"
+    with_items:
+        - regexp: "^GSSAPIAuthentication yes"
+          line: "GSSAPIAuthentication no"
+    notify: restart sshd
+
+
 -   name: Disallow root and password ssh access
     lineinfile:
         path: /etc/ssh/sshd_config
