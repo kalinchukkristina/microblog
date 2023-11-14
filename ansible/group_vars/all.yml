@@ -4,7 +4,7 @@ ansible_python_interpreter: "python3"
 
 region: northeurope
 resource_group: DIDA-KRKA21-DV1673-H23-LP2 # Change me
-domain_name: kristinadev.se # Change me
+domain_name: kristinadev.me # Change me
 
 admin_email: krka21@student.bth.se
 
