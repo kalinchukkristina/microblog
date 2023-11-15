@@ -1,0 +1,8 @@
+---
+- name: Installing Docker On Database Server
+  hosts: database
+  remote_user: deploy
+  become: true
+  roles:
+    - docker-installation
+    - mysql-docker

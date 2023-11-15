@@ -3,15 +3,15 @@
 ansible_python_interpreter: "python3"
 
 region: northeurope
-resource_group: DIDA-KRKA21-DV1673-H23-LP2 # Change me
-domain_name: kristinadev.me # Change me
+resource_group: DIDA-ZAZI21-DV1673-H23-LP2 # Change me
+domain_name: zackziadi.me # Change me
 
-admin_email: krka21@student.bth.se
+admin_email: zazi21@student.bth.se
 
 vmtags:
-  StudentId: krka21 # Change me
+  StudentId: zazi21 # Change me
 
-pub_ssh_key_location: "/Users/kristinakalinchuk/.ssh/azure.pub" # Change me, your local ssh key!
+pub_ssh_key_location: "/Users/zack/.ssh/azure_school.pub" # Change me, your local ssh key!
 all_user_shh_keys: "../ssh_keys.pub" # Everyones ssh keys
 
 server_user: "deploy"
