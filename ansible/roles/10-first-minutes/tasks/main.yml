@@ -37,12 +37,11 @@
       groups: "{{ server_user_groups }}"
 
 - name: Add all ssh-keys for new user
-  authorized_key:
-    user: "{{ server_user }}"
-    state: present
-    key: "{{ item }}"
-  with_lines: cat /Users/zack/Documents/GitHub/microblog/ansible/roles/10-first-minutes/tasks/ssh_keys.txt
-
+  authorized_key: 
+      user: "{{ server_user }}"
+      state: present
+      key: "{{ lookup('file' , item) }}"
+  with_items: "{{ all_user_shh_keys }}"
 
 - name: Add user to sudoers
   lineinfile:
