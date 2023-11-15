@@ -4,4 +4,3 @@
 -   import_playbook: provision_instances.yml
 -   import_playbook: gather_instances.yml
 -   import_playbook: 10-first-minutes.yml
--   import_playbook: docker-installation.yml

@@ -1,0 +1,22 @@
+- name: Installing Mysql With Docker
+  hosts: database
+  remote_user: deploy
+  become: true
+  roles:
+    - docker-installation
+  tasks:
+    - name: Start MySQL Container
+      docker_container:
+        name: db
+        image: "mysql:5.7"
+        command: "--default-authentication-plugin=mysql_native_password"
+        env:
+          MYSQL_DATABASE: "Microbloggen"
+          MYSQL_USER: "microblog"
+          MYSQL_PASSWORD: "passwoooord"
+          MYSQL_ROOT_PASSWORD: "passwoooord"
+        volumes:
+          - mysql_data:/var/lib/mysql
+        restart_policy: always
+        published_ports:
+          - "3306:3306"
