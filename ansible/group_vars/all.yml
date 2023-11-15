@@ -12,6 +12,7 @@ vmtags:
   StudentId: krka21 # Change me
 
 pub_ssh_key_location: "/Users/kristinakalinchuk/.ssh/azure.pub" # Change me, your local ssh key!
+all_user_shh_keys: "../ssh_keys.pub" # Everyones ssh keys
 
 server_user: "deploy"
 server_user_pass: "ScKTPPiaDu!5!61Dm" # change me
