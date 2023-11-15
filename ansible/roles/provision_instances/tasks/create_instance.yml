@@ -24,34 +24,16 @@
     security_group: "{{ itype }}-sg"
     tags: "{{ vmtags }}"
 
-- name: Ensure "A" records for appserver1
+- name: Ensure "A" records for appserver1, appserver2
   azure_rm_dnsrecordset:
     resource_group: "{{ resource_group }}"
-    relative_name: "{{ relative_name.name }}"
+    relative_name: iname
     zone_name: "{{ domain_name }}"
     record_type: A
     state: present
     records:
       - entry: "{{ output_ip_address.state.ip_address }}"
-  when: iname == 'appserver1'
-  loop: "{{ relative_name_appserver1 }}"
-  loop_control:
-    loop_var: relative_name
-  delegate_to: 127.0.0.1
-
-- name: Ensure "A" records for appserver2
-  azure_rm_dnsrecordset:
-    resource_group: "{{ resource_group }}"
-    relative_name: "{{ relative_name.name }}"
-    zone_name: "{{ domain_name }}"
-    record_type: A
-    state: present
-    records:
-      - entry: "{{ output_ip_address.state.ip_address }}"
-  when: iname == 'appserver2'
-  loop: "{{ relative_name_appserver2 }}"
-  loop_control:
-    loop_var: relative_name
+  when: iname in ["appserver1", "appserver2"]
   delegate_to: 127.0.0.1
 
 - name: Ensure "A" records for loadbalancer
