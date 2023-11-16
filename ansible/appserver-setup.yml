@@ -1,15 +1,14 @@
 - name: Installing Microblog With Docker
-  hosts: appserver1
+  hosts: appserver
   remote_user: deploy
   become: true
   roles:
     - docker-installation
   tasks:
-    - name: Create a network for Microblog
+    - name: Connect to Docker Network
       docker_network:
         name: microblog-network
         state: present
-
     - name: Start Microblog Container
       docker_container:
         name: microblog
