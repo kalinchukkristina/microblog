@@ -16,7 +16,7 @@
 
     - name: Obtain SSL Certificates
       shell: |
-        certbot --nginx -d {{ domain_name }} -d www.{{ domain_name }} --non-interactive --agree-tos --email your-email@example.com --redirect
+        certbot --nginx -d {{ domain_name }} -d www.{{ domain_name }} --non-interactive --agree-tos --email zazi@gmail.com --redirect
       args:
         creates: /etc/letsencrypt/live/{{ domain_name }}
 
