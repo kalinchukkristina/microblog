@@ -19,5 +19,5 @@
         ports:
           - "8000:5000"
         networks:
-          - name: microblog_network
+          - name: microblog-network
         restart_policy: always

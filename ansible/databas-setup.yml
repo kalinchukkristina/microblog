@@ -21,9 +21,9 @@
           MYSQL_PASSWORD: "G5Evdo1IqgVNl51"
           MYSQL_ROOT_PASSWORD: "G5Evdo1IqgVNl51"
         volumes:
-          - mysql_data:/var/lib/mysql
+          - mysql-data:/var/lib/mysql
         restart_policy: always
         published_ports:
           - "3306:3306"
         networks:
-          - name: mysql_network
+          - name: microblog-network
