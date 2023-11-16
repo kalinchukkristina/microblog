@@ -5,12 +5,19 @@
   roles:
     - docker-installation
   tasks:
-  - name: Start Microblog Container
-    docker_container:
-      name: microblog
-      image: kristinakalinchuk/microblog:0.2.0
-      env:
-        DATABASE_URL: "mysql+pymysql://microblog:G5Evdo1IqgVNl51@{{ groups['database'][0] }}:3306/microblog"
-      ports:
-        - "8000:5000"
-      restart_policy: always
+    - name: Create a network for Microblog
+      docker_network:
+        name: microblog-network
+        state: present
+
+    - name: Start Microblog Container
+      docker_container:
+        name: microblog
+        image: kristinakalinchuk/microblog:0.2.0
+        env:
+          DATABASE_URL: "mysql+pymysql://microblog:G5Evdo1IqgVNl51@{{ groups['database'][0] }}:3306/microblog"
+        ports:
+          - "8000:5000"
+        networks:
+          - name: microblog_network
+        restart_policy: always

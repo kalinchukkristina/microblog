@@ -5,6 +5,11 @@
   roles:
     - docker-installation
   tasks:
+    - name: Create a network for MySQL
+      docker_network:
+        name: microblog-network
+        state: present
+
     - name: Start MySQL Container
       docker_container:
         name: db
@@ -20,3 +25,5 @@
         restart_policy: always
         published_ports:
           - "3306:3306"
+        networks:
+          - name: mysql_network
