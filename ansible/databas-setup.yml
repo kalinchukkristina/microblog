@@ -11,10 +11,10 @@
         image: "mysql:5.7"
         command: "--default-authentication-plugin=mysql_native_password"
         env:
-          MYSQL_DATABASE: "Microbloggen"
+          MYSQL_DATABASE: "microblog"
           MYSQL_USER: "microblog"
-          MYSQL_PASSWORD: "passwoooord"
-          MYSQL_ROOT_PASSWORD: "passwoooord"
+          MYSQL_PASSWORD: "G5Evdo1IqgVNl51"
+          MYSQL_ROOT_PASSWORD: "G5Evdo1IqgVNl51"
         volumes:
           - mysql_data:/var/lib/mysql
         restart_policy: always
