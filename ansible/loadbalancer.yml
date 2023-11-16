@@ -14,9 +14,14 @@
         name: python3-certbot-nginx
         state: present
 
+    - name: Remove default Nginx site configuration
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
     - name: Obtain SSL Certificates
       shell: |
-        certbot --nginx -d {{ domain_name }} -d www.{{ domain_name }} --non-interactive --agree-tos --email zazi@gmail.com --redirect
+        certbot --nginx -d {{ domain_name }} -d www.{{ domain_name }} --non-interactive --agree-tos --email zackziadi1992@gmail.com --redirect
       args:
         creates: /etc/letsencrypt/live/{{ domain_name }}
 
