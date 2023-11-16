@@ -1,0 +1,22 @@
+- name: Installing Microblog With Docker
+  hosts: appserver
+  remote_user: deploy
+  become: true
+  roles:
+    - docker-installation
+  tasks:
+    - name: Connect to Docker Network
+      docker_network:
+        name: microblog-network
+        state: present
+    - name: Start Microblog Container
+      docker_container:
+        name: microblog
+        image: kristinakalinchuk/microblog:0.2.0
+        env:
+          DATABASE_URL: "mysql+pymysql://microblog:G5Evdo1IqgVNl51@{{ groups['database'][0] }}:3306/microblog"
+        ports:
+          - "8000:5000"
+        networks:
+          - name: microblog-network
+        restart_policy: always
