@@ -1,2 +1,9 @@
 [local]
 localhost ansible_connection=local
+
+[production]
+appserver1.kristinadev.me
+appserver2.kristinadev.me
+
+[databasen]
+database.kristinadev.me
