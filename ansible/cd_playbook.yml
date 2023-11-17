@@ -18,17 +18,17 @@
         state: present
       register: docker_image_result
 
-    - name: Stop the existing Microblog containers if the image has changed
+    - name: Stop the existing Microblog containers
       docker_container:
         name: microblog
         state: stopped
-      when: docker_image_result.changed
+      ignore_errors: yes
 
-    - name: Remove the existing Microblog containers if the image has changed
+    - name: Remove the existing Microblog containers
       docker_container:
         name: microblog
         state: absent
-      when: docker_image_result.changed
+      ignore_errors: yes
 
     - name: Start the new Microblog containers
       docker_container:
