@@ -13,7 +13,7 @@
 
     - name: Pull the latest version of the Microblog Docker image
       docker_image:
-        name: kristinakalinchuk/microblog:latest
+        name: kristinakalinchuk/microblog:0.2.0
         source: pull
         state: present
       register: docker_image_result
@@ -33,7 +33,7 @@
     - name: Start the new Microblog containers
       docker_container:
         name: microblog
-        image: kristinakalinchuk/microblog:latest
+        image: kristinakalinchuk/microblog:0.2.0
         env:
           DATABASE_URL: "mysql+pymysql://microblog:G5Evdo1IqgVNl51@{{ groups['database'][0] }}:3306/microblog"
         ports:
