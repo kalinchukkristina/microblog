@@ -5,7 +5,7 @@
   become: true
 
   tasks:
-    - name: Pull the latest version of the Microblog Docker image
+    - name: Login to Docker Hub
       docker_login:
         username: "{{ docker_hub_username }}"
         password: "{{ docker_hub_password }}"
@@ -18,13 +18,13 @@
         state: present
       register: docker_image_result
 
-    - name: Stop the existing Microblog containers
+    - name: Stop the existing Microblog containers if the image has changed
       docker_container:
         name: microblog
         state: stopped
       when: docker_image_result.changed
 
-    - name: Remove the existing Microblog containers
+    - name: Remove the existing Microblog containers if the image has changed
       docker_container:
         name: microblog
         state: absent
