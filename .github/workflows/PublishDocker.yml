@@ -1,10 +1,12 @@
 name: Publish Docker
 
 on:
-  release:
-    types:
-      - published
   workflow_call:
+    secrets:
+      username:
+        required: true
+      password:
+        required: true
   workflow_dispatch:
 
 jobs:
