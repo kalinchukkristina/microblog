@@ -1,15 +1,18 @@
 name: Continuous Deployment
 
 on:
-  push:
-    branches: ["AnsibleContinuousDeployment"]
-  pull_request:
-    branches: ["AnsibleContinuousDeployment"]
+  release:
+    types:
+      - published
   workflow_dispatch:
 
 jobs:
+  publish-docker:
+    uses: ./.github/workflows/PublishDocker.yml
+
   deploy:
     runs-on: ubuntu-latest
+    needs: publish-docker
 
     steps:
     - name: Checkout code
