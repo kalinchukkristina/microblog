@@ -5,6 +5,12 @@
   become: true
 
   tasks:
+    - name: Stop the existing Microblog containers
+      docker_container:
+        name: microblog-container
+        state: stopped
+      ignore_errors: yes
+
     - name: Remove the existing Microblog containers
       docker_container:
         name: microblog-container
@@ -16,7 +22,7 @@
         name: microblog-container
         image: kristinakalinchuk/microblog:0.2.0
         env:
-          DATABASE_URL: "mysql+pymysql://microblog:G5Evdo1IqgVNl51@{{ groups['database'][0] }}:3306/microblog"
+          DATABASE_URL: "mysql+pymysql://microblog:G5Evdo1IqgVNl51@{{ groups['databasen'][0] }}:3306/microblog"
         ports:
           - "8000:5000"
         networks:
