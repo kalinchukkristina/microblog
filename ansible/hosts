@@ -5,5 +5,5 @@ localhost ansible_connection=local
 appserver1.kristinadev.me
 appserver2.kristinadev.me
 
-[database]
+[databasen]
 database
