@@ -1,6 +1,6 @@
 ---
 - name: Continuous Deployment
-  hosts: appserver  # Ange de servrar där du vill köra CD
+  hosts: production
   remote_user: deploy
   become: true
 
