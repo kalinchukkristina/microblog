@@ -5,25 +5,6 @@
   become: true
 
   tasks:
-    - name: Login to Docker Hub
-      docker_login:
-        username: "{{ docker_hub_username }}"
-        password: "{{ docker_hub_password }}"
-      when: docker_hub_username is defined and docker_hub_password is defined
-
-    - name: Pull the latest version of the Microblog Docker image
-      docker_image:
-        name: kristinakalinchuk/microblog:0.2.0
-        source: pull
-        state: present
-      register: docker_image_result
-
-    - name: Stop the existing Microblog containers
-      docker_container:
-        name: microblog-container
-        state: stopped
-      ignore_errors: yes
-
     - name: Remove the existing Microblog containers
       docker_container:
         name: microblog-container
@@ -33,7 +14,7 @@
     - name: Start the new Microblog containers
       docker_container:
         name: microblog-container
-        image: kristinakalinchuk/microblog:0.2.0
+        image: kristinakalinchuk/microblog:0.1.0
         env:
           DATABASE_URL: "mysql+pymysql://microblog:G5Evdo1IqgVNl51@{{ groups['databasen'][0] }}:3306/microblog"
         ports:
