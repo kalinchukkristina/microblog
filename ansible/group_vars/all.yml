@@ -18,6 +18,3 @@ server_user: "deploy"
 server_user_pass: "ScKTPPiaDu!5!61Dm" # change me
 server_user_groups:
   - sudo
-
-
-lb_method: "round-robin"
