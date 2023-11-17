@@ -4,6 +4,7 @@ on:
   release:
     types:
       - created  # Körs när en ny release skapas
+  workflow_dispatch:
 
 jobs:
   deploy:
