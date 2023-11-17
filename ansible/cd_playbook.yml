@@ -5,6 +5,17 @@
   become: true
 
   tasks:
+    - name: Get the latest GitHub release tag
+      uri:
+        url: "https://api.github.com/repos/kalinchukkristina/microblog/releases/latest"
+        method: GET
+        return_content: yes
+      register: github_release
+
+    - name: Set the release tag as a variable
+      set_fact:
+        release_tag: "{{ github_release.json.tag_name }}"
+
     - name: Remove the existing Microblog containers
       docker_container:
         name: microblog
@@ -18,7 +29,7 @@
     - name: Start Microblog Container
       docker_container:
         name: microblog
-        image: kristinakalinchuk/microblog:0.2.0
+        image: "kristinakalinchuk/microblog:{{ release_tag }}"
         env:
           DATABASE_URL: "mysql+pymysql://microblog:G5Evdo1IqgVNl51@{{ groups['databasen'][0] }}:3306/microblog"
         ports:
