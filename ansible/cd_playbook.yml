@@ -18,25 +18,17 @@
         state: present
       register: docker_image_result
 
-    - name: Check if port 8000 is in use
-      shell: netstat -tuln | grep ':8000'
-      register: port_check
-      ignore_errors: yes
-
     - name: Stop the existing Microblog containers
       docker_container:
-        name: microblog
+        name: microblog_container
         state: stopped
-      when: port_check.rc == 0
       ignore_errors: yes
 
     - name: Remove the existing Microblog containers
       docker_container:
-        name: microblog
+        name: microblog_container
         state: absent
-      when: port_check.rc == 0
       ignore_errors: yes
-
 
     - name: Start the new Microblog containers
       docker_container:
