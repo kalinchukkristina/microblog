@@ -7,6 +7,8 @@ resource_group: DIDA-ZAZI21-DV1673-H23-LP2 # Change me
 domain_name: zackziadi.me # Change me
 
 admin_email: zazi21@student.bth.se
+docker_hub_username: test
+docker_hub_password: test
 
 vmtags:
   StudentId: zazi21 # Change me

@@ -1,0 +1,42 @@
+---
+- name: Continuous Deployment
+  hosts: appserver  # Ange de servrar där du vill köra CD
+  remote_user: deploy
+  become: true
+
+  tasks:
+    - name: Pull the latest version of the Microblog Docker image
+      docker_login:
+        username: "{{ docker_hub_username }}"
+        password: "{{ docker_hub_password }}"
+      when: docker_hub_username is defined and docker_hub_password is defined
+
+    - name: Pull the latest version of the Microblog Docker image
+      docker_image:
+        name: kristinakalinchuk/microblog:latest
+        state: present
+      register: docker_image_result
+
+    - name: Stop the existing Microblog containers
+      docker_container:
+        name: microblog
+        state: stopped
+      when: docker_image_result.changed
+
+    - name: Remove the existing Microblog containers
+      docker_container:
+        name: microblog
+        state: absent
+      when: docker_image_result.changed
+
+    - name: Start the new Microblog containers
+      docker_container:
+        name: microblog
+        image: kristinakalinchuk/microblog:latest
+        env:
+          DATABASE_URL: "mysql+pymysql://microblog:G5Evdo1IqgVNl51@{{ groups['database'][0] }}:3306/microblog"
+        ports:
+          - "8000:5000"
+        networks:
+          - name: microblog-network
+        restart_policy: always
