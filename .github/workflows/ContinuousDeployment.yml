@@ -1,10 +1,11 @@
 name: Continuous Deployment
 
 on:
-  release:
-    types:
-      - created  # Körs när en ny release skapas
-  workflow_dispatch:
+    push:
+      branches: ["AnsibleContinuousDeployment"]
+    pull_request:
+      branches: ["AnsibleContinuousDeployment"]
+    workflow_dispatch:
 
 jobs:
   deploy:
