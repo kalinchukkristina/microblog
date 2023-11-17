@@ -21,15 +21,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # - name: Extract the version tag from release
-      #   run: echo "VERSION=$(echo ${{ github.event.release.tag_name }} | sed 's/^v//')" >> $GITHUB_ENV
+      - name: Extract the version tag from release
+        run: echo "VERSION=$(echo ${{ github.event.release.tag_name }} | sed 's/^v//')" >> $GITHUB_ENV
 
-      # - name: Build and Push Docker Image Test
-      #   run: |
-      #     docker build -t kristinakalinchuk/microblog-test:${{ env.VERSION }} -f docker/Dockerfile_test .
-      #     docker push kristinakalinchuk/microblog-test:${{ env.VERSION }}
+      - name: Build and Push Docker Image Test
+        run: |
+          docker build -t kristinakalinchuk/microblog-test:${{ env.VERSION }} -f docker/Dockerfile_test .
+          docker push kristinakalinchuk/microblog-test:${{ env.VERSION }}
 
-      # - name: Build and Push Docker Images Prod App
-      #   run: |
-      #     docker build -t kristinakalinchuk/microblog:${{ env.VERSION }} -f docker/Dockerfile_prod .
-      #     docker push kristinakalinchuk/microblog:${{ env.VERSION }}
+      - name: Build and Push Docker Images Prod App
+        run: |
+          docker build -t kristinakalinchuk/microblog:${{ env.VERSION }} -f docker/Dockerfile_prod .
+          docker push kristinakalinchuk/microblog:${{ env.VERSION }}
