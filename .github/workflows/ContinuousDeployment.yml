@@ -1,11 +1,11 @@
 name: Continuous Deployment
 
 on:
-    push:
-      branches: ["AnsibleContinuousDeployment"]
-    pull_request:
-      branches: ["AnsibleContinuousDeployment"]
-    workflow_dispatch:
+  push:
+    branches: ["AnsibleContinuousDeployment"]
+  pull_request:
+    branches: ["AnsibleContinuousDeployment"]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -24,18 +24,21 @@ jobs:
       run: |
         pip install ansible docker
 
-    - name: Setup SSH 
-      shell: bash
+    - name: Set up SSH
+      env:
+        PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
-        eval `ssh-agent -s`
-        mkdir -p /home/runner/.ssh/
-        touch /home/runner/.ssh/id_rsa
-        echo -e "${{secrets.SSH_PRIVATE_KEY}}" > /home/runner/.ssh/id_rsa
-        chmod 700 /home/runner/.ssh/id_rsa
+        mkdir -p ~/.ssh
+        echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H 'appserver1.kristinadev.me' >> ~/.ssh/known_hosts
+        ssh-keyscan -H 'appserver2.kristinadev.me' >> ~/.ssh/known_hosts
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+        ssh-add ~/.ssh/id_rsa
 
     - name: Run Ansible CD playbook
       run: |
-        ansible-playbook -i ansible/hosts ansible/cd_playbook.yml --limit production
+        ansible-playbook -i ansible/hosts ansible/cd_playbook.yml --limit production -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
       env:
         DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
         DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
