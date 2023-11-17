@@ -37,7 +37,7 @@
         env:
           DATABASE_URL: "mysql+pymysql://microblog:G5Evdo1IqgVNl51@{{ groups['databasen'][0] }}:3306/microblog"
         ports:
-          - "8000:5000"
+          - "8001:5000"
         networks:
           - name: microblog-network
         restart_policy: always
