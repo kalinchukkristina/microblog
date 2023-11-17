@@ -2,5 +2,5 @@
 localhost ansible_connection=local
 
 [production]
-appserver1.{{ domain_name }}
-appserver2.{{ domain_name }}
+appserver1.kristinadev.me
+appserver2.kristinadev.me
