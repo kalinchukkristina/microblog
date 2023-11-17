@@ -22,8 +22,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install ansible
-        ansible-galaxy install -r
+        pip install ansible docker
 
     - name: Run Ansible CD playbook
       run: |
