@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Followers functionality
 
 ### Changed
 
@@ -31,5 +30,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Followers Functionality 
+- Followers Functionality
 - Unittests For Followers
+
+## [0.2.1] - 2023-11-17
+
+### Added
+- Continuous Deployment (CD) in Github action
+- Ansible playbooks CD
+
+## [0.3.0] - 2023-11-19
+
+### Added
+
+- Version Route
+- Version Route test
