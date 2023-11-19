@@ -12,7 +12,7 @@ services:
 
     prod:
         container_name: microblog
-        image: kristinakalinchuk/microblog:0.2.0
+        image: kristinakalinchuk/microblog:0.3.0
         ports:
             - "8000:5000"
         env_file:
@@ -24,7 +24,7 @@ services:
 
     test:
         container_name: microblog-test
-        image: kristinakalinchuk/microblog-test:0.2.0
+        image: kristinakalinchuk/microblog-test:0.3.0
         volumes:
             - "./app:/microblog/app"
             - "./tests:/microblog/tests"
