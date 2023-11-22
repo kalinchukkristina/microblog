@@ -11,4 +11,4 @@ def test_version_route_response(client):
     """
     response = client.get("/version")
     assert response.status_code == 200
-    assert b"Fhe current version of the app is: " + version.encode() in response.data
+    assert b"The current version of the app is: " + version.encode() in response.data
