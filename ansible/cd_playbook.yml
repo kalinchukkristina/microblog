@@ -16,17 +16,40 @@
     - name: Set the release tag as a variable
       set_fact:
         release_tag: "{{ github_release.json.tag_name | regex_replace('^v', '') }}"
+    
+    - name: Get Microblog version from the website
+      uri:
+        url: "https://kristinadev.me/version"
+        validate_certs: no
+        method: GET
+        return_content: yes
+      register: version_response
+
+    - name: Extract version from the website
+      set_fact:
+        deployed_version: "{{ version_response.content | regex_replace('^The current version of the app is: ', '') }}"
+
+    - name: Fail the playbook if versions do not match
+      fail:
+        msg: "GitHub version ({{ release_tag }}) does not match deployed version ({{ deployed_version }})"
+      when: release_tag != deployed_version
+
+    - name: Print a message if versions match
+      debug:
+        msg: "GitHub version ({{ release_tag }}) matches deployed version ({{ deployed_version }})"
+      when: release_tag == deployed_version
 
     - name: Remove the existing Microblog containers
       docker_container:
         name: microblog
         state: absent
       ignore_errors: yes
-    
+
     - name: Connect to Docker Network
       docker_network:
         name: microblog-network
         state: present
+
     - name: Start Microblog Container
       docker_container:
         name: microblog

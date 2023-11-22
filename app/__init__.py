@@ -23,7 +23,7 @@ login.login_view = 'auth.login'
 login.login_message = 'Please log in to access this page.'
 bootstrap = Bootstrap()
 moment = Moment()
-version="0.3.2"
+version="0.3.3"
 
 
 def create_app(config_class=ProdConfig):

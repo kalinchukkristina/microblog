@@ -130,4 +130,4 @@ def get_latest_version():
     """
     Route to get the latest version of the application
     """
-    return f"Fhe current version of the app is: {version}"
+    return f"The current version of the app is: {version}"
