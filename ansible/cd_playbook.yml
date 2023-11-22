@@ -3,6 +3,7 @@
   hosts: production
   remote_user: deploy
   become: true
+  serial: 1
 
   tasks:
     - name: Get the latest GitHub release tag
