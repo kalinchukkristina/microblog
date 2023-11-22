@@ -29,15 +29,15 @@
       dest: /etc/apt/apt.conf.d/50unattended-upgrades
 
 - name: Backup existing sshd_config if it exists
-      command: mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
-      args:
-        creates: /etc/ssh/sshd_config
-      ignore_errors: yes
+  command: mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+  args:
+    creates: /etc/ssh/sshd_config
+  ignore_errors: yes
 
 - name: Copy sshd_config file
-      copy:
-        src: files/sshd_config
-        dest: /etc/ssh/sshd_config
+  copy:
+    src: files/sshd_config
+    dest: /etc/ssh/sshd_config
 
 - name: Create user
   user:
