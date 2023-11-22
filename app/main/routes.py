@@ -3,15 +3,13 @@ Contains routes for main purpose of app
 """
 
 from datetime import datetime
-from flask import render_template, flash, redirect, url_for, request, current_app, jsonify
+from flask import render_template, flash, redirect, url_for, request, current_app
 from flask_login import current_user, login_required
-import requests
 from app import db
+from app import version
 from app.main.forms import EditProfileForm, PostForm
 from app.models import User, Post
 from app.main import bp
-
-
 
 
 @bp.before_request
@@ -130,13 +128,6 @@ def unfollow(username):
 @bp.route('/version')
 def get_latest_version():
     """
-    Route to get the latest version of the application from GitHub
+    Route to get the latest version of the application
     """
-    try:
-        response = requests.get('https://api.github.com/repos/kalinchukkristina/microblog/releases/latest', timeout=10)
-        response.raise_for_status()  # Will raise an exception for HTTP errors
-        data = response.json()
-        version = data.get('tag_name', 'Version not found')
-        return jsonify({'latest_version': version})
-    except requests.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+    return f"Fhe current version of the app is: {version}"
