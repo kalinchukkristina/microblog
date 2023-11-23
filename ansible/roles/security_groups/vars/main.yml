@@ -23,6 +23,12 @@ sg_groups:
             priority: 1003
             direction: Inbound
             source_address_prefix: '0.0.0.0/0'
+        -   name: DenyAllInternalTraffic
+            priority: 4000
+            direction: Inbound
+            access: Deny
+            source_address_prefix: "VirtualNetwork"
+            destination_address_prefix: "VirtualNetwork"
     -   name: appserver
         port_rules:
         -   name: APP
@@ -38,7 +44,13 @@ sg_groups:
             access: Allow
             priority: 1002
             direction: Inbound
-            source_address_prefix: '0.0.0.0/0'
+            source_address_prefix: '{{ groups["loadbalancer"][0] }}/32'
+        -   name: DenyAllInternalTraffic
+            priority: 4000
+            direction: Inbound
+            access: Deny
+            source_address_prefix: "VirtualNetwork"
+            destination_address_prefix: "VirtualNetwork"
     -   name: database
         port_rules:
         -   name: SSH
@@ -57,3 +69,9 @@ sg_groups:
             source_address_prefix:
                 - '{{ groups["appserver"][0] }}/32'
                 - '{{ groups["appserver"][1] }}/32'
+        -   name: DenyAllInternalTraffic
+            priority: 4000
+            direction: Inbound
+            access: Deny
+            source_address_prefix: "VirtualNetwork"
+            destination_address_prefix: "VirtualNetwork"
