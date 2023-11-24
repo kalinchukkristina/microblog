@@ -41,10 +41,10 @@ jobs:
                   rm dockle.deb
 
             - name: Execute Bandit Security Checks
-              run: make bandit-test
+              run: make bandit-run
 
             - name: Execute Trivy Vulnerability Scan
-              run: make trivy-test
+              run: make trivy-run
 
             - name: Execute Dockle Container Scan
-              run: make dockle-test
+              run: make dockle-run

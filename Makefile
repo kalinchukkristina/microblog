@@ -217,19 +217,19 @@ install-deploy:
 	cd ansible && ansible-galaxy install -r requirements.yml
 
 # target: bandit-test					 - Run SAST tool bandit to find security holes in the code. Skipping hashlib (B324) as it's false positive.
-.PHONY: bandit-test
+.PHONY: bandit-run
 bandit-test:
 	bandit  -s B324 app/*.py app/auth/*.py app/errors/*.py app/main/*.py
 
 
 # target: dockle-test					 - Run SAST tool dockle to find security holes in the docker image.
-.PHONY: dockle-test
+.PHONY: dockle-run
 dockle-test:
 	docker build -f docker/Dockerfile_prod -t microblog:latest .
 	dockle --ignore DKL-LI-0003 -f json microblog:latest
 
 # target: trivy-test
-.PHONY: trivy-test
+.PHONY: trivy-run
 trivy-test:
 	docker build -f docker/Dockerfile_prod -t microblog:latest .
 	trivy image microblog:latest --scanners vuln,secret,config
