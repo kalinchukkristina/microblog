@@ -1,0 +1,50 @@
+name: Security Scan Workflow
+
+on:
+    release:
+        types: [created]
+    workflow_dispatch:
+
+jobs:
+    Security-Checks:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v2
+
+            - name: Setup Python Environment
+              uses: actions/setup-python@v2
+              with:
+                  python-version: "3.x"
+
+            - name: Install System Dependencies
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y make wget apt-transport-https gnupg lsb-release
+
+            - name: Install Bandit (Python Security Linter)
+              run: pip install bandit
+
+            - name: Setup and Install Trivy (Vulnerability Scanner)
+              run: |
+                  wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+                  echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+                  sudo apt-get update
+                  sudo apt-get install trivy
+
+            - name: Install Dockle (Container Image Linter)
+              run: |
+                  VERSION=$(curl -s https://api.github.com/repos/goodwithtech/dockle/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+                  curl -L -o dockle.deb "https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.deb"
+                  sudo dpkg -i dockle.deb
+                  rm dockle.deb
+
+            - name: Execute Bandit Security Checks
+              run: make bandit-test
+
+            - name: Execute Trivy Vulnerability Scan
+              run: make trivy-test
+
+            - name: Execute Dockle Container Scan
+              run: make dockle-test
