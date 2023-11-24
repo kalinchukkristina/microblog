@@ -70,3 +70,10 @@ def user_post_response(client, login_user_response, user_dict, post_dict):
         follow_redirects=True,
     )
     return response
+
+@pytest.fixture(scope="function")
+def client(test_app):
+    """
+    Create client for app
+    """
+    return test_app.test_client()

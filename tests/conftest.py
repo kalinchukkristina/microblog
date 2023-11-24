@@ -21,11 +21,3 @@ def test_app():
     db.session.remove()
     db.drop_all()
     app_context.pop()
-
-
-@pytest.fixture(scope="function")
-def client(test_app):
-    """
-    Create client for app
-    """
-    return test_app.test_client()
