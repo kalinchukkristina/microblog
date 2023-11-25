@@ -1,4 +1,9 @@
+# Use a specific version of the base image
 FROM python:3.8-alpine
+
+# Install wget for the HEALTHCHECK instruction
+RUN apk --no-cache add wget
+
 RUN adduser -D microblog
 
 WORKDIR /home/microblog
@@ -18,5 +23,11 @@ RUN chown -R microblog:microblog ./
 
 USER microblog
 
+# Expose the port the app runs on
 EXPOSE 5000
+
+# Add a HEALTHCHECK instruction
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:5000/ || exit 1
+
 ENTRYPOINT ["./boot.sh"]
