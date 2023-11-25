@@ -11,6 +11,11 @@
 # Set default target
 .DEFAULT_GOAL := test
 
+# Fetch the version number from GitHub API and remove the 'v' prefix
+VERSION := $(shell curl -s https://api.github.com/repos/kalinchukkristina/microblog/releases/latest | grep 'tag_name' | cut -d '"' -f 4 | sed 's/v//')
+
+
+
 # Decide if use python3 or python
 ifeq (, $(@shell which python3))
 	py = python3
@@ -225,12 +230,12 @@ bandit-test:
 # target: dockle-test					 - Run SAST tool dockle to find security holes in the docker image.
 .PHONY: dockle-run
 dockle-test:
-	docker build -f docker/Dockerfile_prod -t microblog:latest .
-	dockle --ignore DKL-LI-0003 -f json microblog:latest
+	docker build -f docker/Dockerfile_prod -t microblog:$(VERSION) .
+	dockle --ignore DKL-LI-0003 -f json microblog:$(VERSION)
 
 # target: trivy-test
 .PHONY: trivy-run
 trivy-test:
-	docker build -f docker/Dockerfile_prod -t microblog:latest .
-	trivy image microblog:latest --scanners vuln,secret,config
+	docker build -f docker/Dockerfile_prod -t microblog:$(VERSION) .
+	trivy image microblog:$(VERSION) --scanners vuln,secret,config
 	trivy fs --scanners vuln,secret,config .
