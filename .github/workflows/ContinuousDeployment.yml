@@ -7,6 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
+  validation:
+    uses: ./.github/workflows/CDSecurity.yml
   docker:
     uses: ./.github/workflows/PublishDocker.yml
     secrets:
@@ -14,6 +16,7 @@ jobs:
       password: ${{ secrets.DOCKER_PASSWORD }}
   deploy:
     runs-on: ubuntu-latest
+    needs: validation
     needs: docker
 
     steps:
