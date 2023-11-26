@@ -32,12 +32,10 @@ jobs:
 
             - name: Build and Push Docker Image Test
               run: |
-                  export DOCKER_CONTENT_TRUST=1
                   docker build -t kristinakalinchuk/microblog-test:${{ env.VERSION }} -f docker/Dockerfile_test .
                   docker push kristinakalinchuk/microblog-test:${{ env.VERSION }}
 
             - name: Build and Push Docker Images Prod App
               run: |
-                  export DOCKER_CONTENT_TRUST=1
                   docker build -t kristinakalinchuk/microblog:${{ env.VERSION }} -f docker/Dockerfile_prod .
                   docker push kristinakalinchuk/microblog:${{ env.VERSION }}
