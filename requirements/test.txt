@@ -4,4 +4,3 @@ pytest >= 6.1.2
 coverage~=4.5.4
 requests
 bandit
-prometheus-flask-exporter==0.18.5

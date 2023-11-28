@@ -15,7 +15,7 @@ from flask_bootstrap import Bootstrap
 from prometheus_flask_exporter.multiprocess import GunicornInternalPrometheusMetrics
 from app.config import ProdConfig, RequestFormatter
 
-
+metrics = GunicornInternalPrometheusMetrics.for_app_factory()
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
@@ -32,8 +32,6 @@ def create_app(config_class=ProdConfig):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    os.environ['PROMETHEUS_MULTIPROC_DIR'] = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'multiproc_data')
-    metrics = GunicornInternalPrometheusMetrics.for_app_factory()
     metrics.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
