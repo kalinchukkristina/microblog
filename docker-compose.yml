@@ -12,7 +12,7 @@ services:
 
     prod:
         container_name: microblog
-        image: kristinakalinchuk/microblog:0.3.0
+        image: kristinakalinchuk/microblog:0.3.6
         ports:
             - "8000:5000"
         env_file:
@@ -24,7 +24,7 @@ services:
 
     test:
         container_name: microblog-test
-        image: kristinakalinchuk/microblog-test:0.3.0
+        image: kristinakalinchuk/microblog-test:0.3.6
         volumes:
             - "./app:/microblog/app"
             - "./tests:/microblog/tests"
@@ -35,9 +35,58 @@ services:
         depends_on:
             - mysql
 
+    node-exporter:
+        container_name: node-exporter
+        image: prom/node-exporter
+        restart: unless-stopped
+        volumes:
+            - /proc:/host/proc:ro
+            - /sys:/host/sys:ro
+            - /:/rootfs:ro
+        command:
+            - '--path.procfs=/host/proc'
+            - '--path.rootfs=/rootfs'
+            - '--path.sysfs=/host/sys'
+            - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+        ports:
+            - "9100:9100"
+        networks:
+            - monitor
+
+    prometheus:
+        image: prom/prometheus:v2.31.1
+        restart: unless-stopped
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+            - prometheus-data:/prometheus
+        command:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus"
+            - "--web.console.libraries=/etc/prometheus/console_libraries"
+            - "--web.console.templates=/etc/prometheus/consoles"
+            - "--storage.tsdb.retention.time=24h"
+            - "--web.enable-lifecycle"
+        networks:
+            - monitor
+        ports:
+            - "9090:9090"
+    grafana:
+        image: grafana/grafana:8.2.4
+        restart: unless-stopped
+        volumes:
+            - grafana-data:/var/lib/grafana
+        networks:
+            - monitor
+        ports:
+            - "3000:3000"
+
+
 networks:
     microblog-network:
+    monitor:
 
 volumes:
     mysql-data:
         driver: local
+    prometheus-data: {}
+    grafana-data: {}
