@@ -9,7 +9,7 @@ scrape_configs:
           instance: node-exporter
   - job_name: "flask"
     static_configs:
-      - targets: ["prod-build:5000"] #contaner's internal port
+      - targets: ["prod:5000"] #contaner's internal port
   - job_name: "prometheus"
     static_configs:
       - targets: ["0.0.0.0:9090"]

@@ -1,0 +1,50 @@
+- name: Installing Prometheus, Grafana, Alertmanager
+  hosts: monitoring
+  remote_user: deploy
+  become: true
+  roles:
+    - docker-installation
+  tasks:
+    - name: Create a network for Monitoring
+      docker_network:
+        name: monitoring_network
+        state: present
+    - name: Start Prometheus container
+      docker_container:
+        name: prometheus
+        image: prom/prometheus
+        ports:
+          - "9090:9090"
+        networks:
+          - name: monitoring_network
+        restart_policy: always
+        state: started
+
+    - name: Start Grafana container
+      docker_container:
+        name: grafana
+        image: grafana/grafana
+        ports:
+          - "3000:3000"
+        networks:
+          - name: monitoring_network
+        restart_policy: always
+        state: started
+
+    - name: Start Alertmanager container
+      docker_container:
+        name: alertmanager
+        image: prom/alertmanager
+        ports:
+          - "9093:9093"
+        networks:
+          - name: monitoring_network
+        restart_policy: always
+        state: started
+
+    - name: Prometheus as data source
+      community.grafana.grafana_datasource:
+        name: prometheus
+        url: http://0.0.0.0:3000
+        ds_type: prometheus
+        ds_url: http://prometheus:9090
