@@ -1,4 +1,3 @@
----
 - name: Install Nginx
   apt:
     name: nginx
@@ -41,3 +40,18 @@
     state: link
   notify:
     - Reload Nginx
+
+- name: Run nginx-prometheus-exporter in Docker
+  docker_container:
+    name: nginx-prometheus-exporter
+    image: nginx/nginx-prometheus-exporter:0.4.2
+    restart_policy: always
+    state: started
+    ports:
+      - "9113:9113"
+    env:
+      nginx_scrape_uri: "https://{{ domain_name }}/metrics"
+      nginx_retries: "10"
+      nginx_ssl_verify: "false"
+      web_telemetry_path: "/prometheus"
+    command: "--nginx.scrape-uri=https://{{ domain_name }}/metrics --nginx.retries=10 --nginx.ssl-verify=false --web.telemetry-path=/prometheus"

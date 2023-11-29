@@ -17,3 +17,8 @@ scrape_configs:
       - targets: ["0.0.0.0:9090"]
         labels:
           instance: prometheus
+  - job_name: nginx
+    static_configs: 
+    - targets: ["{{ domain_name }}:9113"]
+        labels:
+          instance: nginx-exporter
