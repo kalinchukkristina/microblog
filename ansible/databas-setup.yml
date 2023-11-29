@@ -6,11 +6,6 @@
     - docker-installation
     - node-exporter
   tasks:
-    - name: Create a network for MySQL
-      docker_network:
-        name: microblog-network
-        state: present
-
     - name: Start MySQL Container
       docker_container:
         name: db
