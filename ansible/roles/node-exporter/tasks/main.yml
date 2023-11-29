@@ -1,0 +1,23 @@
+- name: Pull Node Exporter Docker image
+  docker_image:
+    name: prom/node-exporter
+    tag: v1.2.2
+    source: pull
+
+- name: Create Node Exporter Docker container
+  docker_container:
+    name: node-exporter
+    image: prom/node-exporter:v1.2.2
+    restart_policy: unless-stopped
+    published_ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    networks:
+      - name: microblog-network
