@@ -10,14 +10,19 @@
         name: monitoring_network
         state: present
 
-    - name: Create directory for Prometheus data and configuration
+    - name: Create directory for Prometheus configuration
       file:
         path: /prometheus
         state: directory
 
+    - name: Create directory for Prometheus data
+      file:
+        path: /prometheus-data
+        state: directory
+
     - name: Copy Prometheus configuration file to the server
       copy:
-        src: prometheus.yml  # Update with the actual path to your prometheus.yml file
+        src: prometheus.yml
         dest: /prometheus/prometheus.yml
         mode: 0644
 
@@ -27,6 +32,7 @@
         image: prom/prometheus
         volumes:
           - /prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+          - /prometheus-data:/prometheus
         command:
           - "--config.file=/etc/prometheus/prometheus.yml"
           - "--storage.tsdb.path=/prometheus"
