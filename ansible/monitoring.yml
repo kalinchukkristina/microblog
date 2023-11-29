@@ -9,10 +9,31 @@
       docker_network:
         name: monitoring_network
         state: present
+
+    - name: Create directory for Prometheus data and configuration
+      file:
+        path: /prometheus
+        state: directory
+
+    - name: Copy Prometheus configuration file to the server
+      copy:
+        src: prometheus.yml  # Update with the actual path to your prometheus.yml file
+        dest: /prometheus/prometheus.yml
+        mode: 0644
+
     - name: Start Prometheus container
       docker_container:
         name: prometheus
         image: prom/prometheus
+        volumes:
+          - /prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+        command:
+          - "--config.file=/etc/prometheus/prometheus.yml"
+          - "--storage.tsdb.path=/prometheus"
+          - "--web.console.libraries=/etc/prometheus/console_libraries"
+          - "--web.console.templates=/etc/prometheus/consoles"
+          - "--storage.tsdb.retention.time=24h"
+          - "--web.enable-lifecycle"
         ports:
           - "9090:9090"
         networks:
@@ -45,6 +66,8 @@
     - name: Prometheus as data source
       community.grafana.grafana_datasource:
         name: prometheus
-        url: http://0.0.0.0:3000
+        url: http://{{ groups["monitoring"][0] }}:3000
         ds_type: prometheus
-        ds_url: http://prometheus:9090
+        ds_url: http://{{ groups["monitoring"][0] }}:9090
+        url_username : admin
+        url_password: admin
