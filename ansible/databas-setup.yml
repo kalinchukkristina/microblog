@@ -4,6 +4,7 @@
   become: true
   roles:
     - docker-installation
+    - node-exporter
   tasks:
     - name: Create a network for MySQL
       docker_network:
