@@ -15,10 +15,10 @@
         path: /prometheus
         state: directory
 
-    - name: Create directory for Prometheus data
-      file:
-        path: /prometheus-data
-        state: directory
+    # - name: Create directory for Prometheus data
+    #   file:
+    #     path: /prometheus-data
+    #     state: directory
 
     - name: Copy Prometheus configuration file to the server
       copy:
@@ -26,13 +26,22 @@
         dest: /prometheus/prometheus.yml
         mode: 0644
 
+    - name: Stop and remove containers
+      docker_container:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - prometheus
+        - grafana
+        - alertmanager
+
     - name: Start Prometheus container
       docker_container:
         name: prometheus
         image: prom/prometheus
         volumes:
           - /prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-          - /prometheus-data:/prometheus
+          # - /prometheus-data:/prometheus
         command:
           - "--config.file=/etc/prometheus/prometheus.yml"
           - "--storage.tsdb.path=/prometheus"
@@ -69,11 +78,11 @@
         restart_policy: always
         state: started
 
-    - name: Prometheus as data source
-      community.grafana.grafana_datasource:
-        name: prometheus
-        url: http://{{ groups["monitoring"][0] }}:3000
-        ds_type: prometheus
-        ds_url: http://{{ groups["monitoring"][0] }}:9090
-        url_username : admin
-        url_password: admin
+    # - name: Prometheus as data source
+    #   community.grafana.grafana_datasource:
+    #     name: prometheus
+    #     url: http://{{ groups["monitoring"][0] }}:3000
+    #     ds_type: prometheus
+    #     ds_url: http://{{ groups["monitoring"][0] }}:9090
+    #     url_username : admin
+    #     url_password: admin
