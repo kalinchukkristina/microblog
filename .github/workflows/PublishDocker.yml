@@ -33,6 +33,11 @@ jobs:
             - name: Extract the version tag from release
               run: echo "VERSION=$(echo ${{ github.event.release.tag_name }} | sed 's/^v//')" >> $GITHUB_ENV
 
+            - name: Set up environment variable and directory
+              run: |
+                mkdir -p ${PROMETHEUS_MULTIPROC_DIR}
+                echo "PROMETHEUS_MULTIPROC_DIR=${PROMETHEUS_MULTIPROC_DIR}" >> $GITHUB_ENV
+
             - name: Build and Push Docker Image Test
               run: |
                   docker build -t kristinakalinchuk/microblog-test:${{ env.VERSION }} -f docker/Dockerfile_test .
