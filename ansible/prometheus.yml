@@ -4,12 +4,12 @@ global:
 scrape_configs:
   - job_name: "node"
     static_configs:
-      - targets: ["98.71.55.191:9100"]
+      - targets: ["database.kristinadev.me:9100"]
         labels:
           instance: node-exporter
   - job_name: "flask"
     static_configs:
-      - targets: ["98.71.52.159:8000", "98.71.53.2:8000"]
+      - targets: ["appserver1.kristinadev.me:8000", "appserver2.kristinadev.me:8000"]
         labels:
           instance: flask-exporter
   - job_name: "prometheus"
