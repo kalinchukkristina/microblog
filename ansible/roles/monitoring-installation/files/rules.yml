@@ -1,0 +1,6 @@
+groups:
+- name: Total number of Get Requests
+  rules:
+  - alert: More than 65 requests
+    expr: flask_http_request_total{method="GET",status="200"} > 65 and flask_http_request_total{method="GET",status="200"} < 85
+    for: 5s
