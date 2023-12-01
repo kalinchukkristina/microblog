@@ -8,16 +8,28 @@
       path: /prometheus
       state: directory
 
-# - name: Create directory for Prometheus data
-#   file:
-#     path: /prometheus-data
-#     state: directory
+- name: Create directory for Prometheus data
+  file:
+    path: /prometheus-data
+    state: directory
 
 - name: Copy Prometheus configuration file to the server
   copy:
       src: files/prometheus.yml
       dest: /prometheus/prometheus.yml
       mode: 0644
+
+- name: Copy Alertmanager rules file to the server
+  copy:
+      src: files/rules.yml
+      dest: /prometheus/rules.yml
+      mode: 0644
+
+- name: Copy Alertmanager config to VM
+  copy:
+      src: files/alertmanager.yml
+      dest: /prometheus/alertmanager.yml
+
 
 - name: Stop and remove containers
   docker_container:
@@ -57,6 +69,7 @@
       image: prom/prometheus
       volumes:
           - /prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+          - /prometheus/rules.yml:/etc/prometheus/rules.yml
           - prometheus-data:/prometheus
       command:
           - "--config.file=/etc/prometheus/prometheus.yml"
@@ -89,22 +102,25 @@
   docker_container:
       name: alertmanager
       image: prom/alertmanager
+      volumes:
+          - "/prometheus/alertmanager.yml:/config/alermanager.yml"
       ports:
           - "9093:9093"
+      command: --config.file=/config/alermanager.yml
       networks:
           - name: monitoring_network
       restart_policy: always
       state: started
 
-- name: Prometheus as data source
-  community.grafana.grafana_datasource:
-      name: prometheus
-      url: "http://0.0.0.0:3000"
-      ds_type: "prometheus"
-      ds_url: http://prometheus:9090
-      grafana_user: "admin"
-      grafana_password: "admin"
-      state: present
+# - name: Prometheus as data source
+#   community.grafana.grafana_datasource:
+#       name: prometheus
+#       url: "http://0.0.0.0:3000"
+#       ds_type: "prometheus"
+#       ds_url: http://prometheus:9090
+#       grafana_user: "admin"
+#       grafana_password: "admin"
+#       state: present
 
 - name: Flask Dashboard
   community.grafana.grafana_dashboard:
