@@ -53,6 +53,11 @@
       src: files/flask_dash.json
       dest: /home/deploy/flask_dash.json
 
+- name: Node Dash Json To VM
+  copy:
+      src: files/node_dash.json
+      dest: /home/deploy/node_dash.json
+
 - name: Nginx Dash Json To VM
   copy:
       src: files/nginx_dash.json
@@ -137,5 +142,14 @@
       grafana_user: "admin"
       grafana_password: "admin"
       path: /home/deploy/nginx_dash.json
+      overwrite: true
+      state: present
+
+- name: Node Exporter Dashboard
+  community.grafana.grafana_dashboard:
+      grafana_url: "http://0.0.0.0:3000"
+      grafana_user: "admin"
+      grafana_password: "admin"
+      path: /home/deploy/node_dash.json
       overwrite: true
       state: present
