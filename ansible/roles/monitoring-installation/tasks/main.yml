@@ -46,6 +46,11 @@
       src: files/nginx_dash.json
       dest: /home/deploy/nginx_dash.json
 
+- name: Set Grafana.ini Inside Of VM
+  copy:
+      src: files/grafana.ini
+      dest: /home/deploy/grafana.ini
+
 - name: Start Prometheus container
   docker_container:
       name: prometheus
