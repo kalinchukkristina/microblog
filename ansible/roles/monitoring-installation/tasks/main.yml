@@ -65,7 +65,7 @@
 - name: Set Grafana.ini Inside Of VM
   copy:
       src: files/grafana.ini
-      dest: /home/deploy/grafana.ini
+      dest: /etc/grafana/grafana.ini
 
 - name: Start Prometheus container
   docker_container:
