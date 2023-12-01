@@ -10,8 +10,8 @@
 
 - name: Create directory for Prometheus data
   file:
-    path: /prometheus-data
-    state: directory
+      path: /prometheus-data
+      state: directory
 
 - name: Copy Prometheus configuration file to the server
   copy:
@@ -29,7 +29,6 @@
   copy:
       src: files/alertmanager.yml
       dest: /prometheus/alertmanager.yml
-
 
 - name: Stop and remove containers
   docker_container:
