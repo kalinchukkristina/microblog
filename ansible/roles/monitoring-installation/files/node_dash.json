@@ -96,7 +96,7 @@
 			"steppedLine": false,
 			"targets": [
 				{
-					"expr": "avg without(cpu) (irate(node_cpu_seconds_total{job=\"node-exporter\",instance=\"node-exporter\", mode!=\"idle\"}[1m]))",
+					"expr": "avg without(cpu) (irate(node_cpu_seconds_total{job=\"node\",instance=\"node-exporter\", mode!=\"idle\"}[1m]))",
 					"interval": "",
 					"legendFormat": "{{mode}}",
 					"refId": "A"
