@@ -1,0 +1,7 @@
+- name: Installing Prometheus, Grafana, Alertmanager
+  hosts: monitoring
+  remote_user: deploy
+  become: true
+  roles:
+      - docker-installation
+      - monitoring-installation

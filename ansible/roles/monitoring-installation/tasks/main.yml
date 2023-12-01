@@ -1,0 +1,120 @@
+- name: Create a network for Monitoring
+  docker_network:
+      name: monitoring_network
+      state: present
+
+- name: Create directory for Prometheus configuration
+  file:
+      path: /prometheus
+      state: directory
+
+# - name: Create directory for Prometheus data
+#   file:
+#     path: /prometheus-data
+#     state: directory
+
+- name: Copy Prometheus configuration file to the server
+  copy:
+      src: files/prometheus.yml
+      dest: /prometheus/prometheus.yml
+      mode: 0644
+
+- name: Stop and remove containers
+  docker_container:
+      name: "{{ item }}"
+      state: absent
+  loop:
+      - prometheus
+      - grafana
+      - alertmanager
+
+- name: Create Prometheus data volume
+  docker_volume:
+      name: prometheus-data
+
+- name: Create Grafana data volume
+  docker_volume:
+      name: grafana-data
+
+- name: Flask Dash Json To VM
+  copy:
+      src: files/flask_dash.json
+      dest: /home/deploy/flask_dash.json
+
+- name: Nginx Dash Json To VM
+  copy:
+      src: files/nginx_dash.json
+      dest: /home/deploy/nginx_dash.json
+
+- name: Start Prometheus container
+  docker_container:
+      name: prometheus
+      image: prom/prometheus
+      volumes:
+          - /prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+          - prometheus-data:/prometheus
+      command:
+          - "--config.file=/etc/prometheus/prometheus.yml"
+          - "--storage.tsdb.path=/prometheus"
+          - "--web.console.libraries=/etc/prometheus/console_libraries"
+          - "--web.console.templates=/etc/prometheus/consoles"
+          - "--storage.tsdb.retention.time=24h"
+          - "--web.enable-lifecycle"
+      ports:
+          - "9090:9090"
+      networks:
+          - name: monitoring_network
+      restart_policy: always
+      state: started
+
+- name: Start Grafana container
+  docker_container:
+      name: grafana
+      image: grafana/grafana
+      volumes:
+          - grafana-data:/var/lib/grafana
+      ports:
+          - "3000:3000"
+      networks:
+          - name: monitoring_network
+      restart_policy: always
+      state: started
+
+- name: Start Alertmanager container
+  docker_container:
+      name: alertmanager
+      image: prom/alertmanager
+      ports:
+          - "9093:9093"
+      networks:
+          - name: monitoring_network
+      restart_policy: always
+      state: started
+
+- name: Prometheus as data source
+  community.grafana.grafana_datasource:
+      name: prometheus
+      url: "http://0.0.0.0:3000"
+      ds_type: "prometheus"
+      ds_url: http://prometheus:9090
+      grafana_user: "admin"
+      grafana_password: "admin"
+      state: present
+
+- name: Flask Dashboard
+  community.grafana.grafana_dashboard:
+      grafana_url: "http://0.0.0.0:3000"
+      grafana_user: "admin"
+      grafana_password: "admin"
+      path: /home/deploy/flask_dash.json
+      overwrite: true
+      state: present
+
+- name: Nginx Dashboards
+  community.grafana.grafana_dashboard:
+      grafana_url: "http://0.0.0.0:3000"
+      grafana_user: "admin"
+      grafana_password: "admin"
+      path: /home/deploy/nginx_dash.json
+      overwrite: true
+      state: present
