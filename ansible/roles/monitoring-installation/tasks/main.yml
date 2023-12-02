@@ -117,15 +117,28 @@
       restart_policy: always
       state: started
 
-# - name: Prometheus as data source
-#   community.grafana.grafana_datasource:
-#       name: prometheus
-#       url: "http://0.0.0.0:3000"
-#       ds_type: "prometheus"
-#       ds_url: http://prometheus:9090
-#       grafana_user: "admin"
-#       grafana_password: "admin"
-#       state: present
+- name: Check if Prometheus data source exists
+  uri:
+    url: "http://0.0.0.0:3000/api/datasources/name/prometheus"
+    method: GET
+    user: "admin"
+    password: "admin"
+    headers:
+      Authorization: "Bearer glsa_zFWsnO6oyIxOxd7JnnnDedmbJLiJM1oM_b209872c"
+    status_code: 200
+  register: prometheus_datasource_check
+  ignore_errors: yes
+
+- name: Prometheus as data source
+  community.grafana.grafana_datasource:
+      name: prometheus
+      url: "http://0.0.0.0:3000"
+      ds_type: "prometheus"
+      ds_url: http://prometheus:9090
+      grafana_user: "admin"
+      grafana_password: "admin"
+      state: present
+  when: prometheus_datasource_check.status != 200
 
 - name: Flask Dashboard
   community.grafana.grafana_dashboard:
