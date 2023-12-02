@@ -125,7 +125,7 @@
     password: "admin"
     headers:
       Authorization: "Bearer glsa_zFWsnO6oyIxOxd7JnnnDedmbJLiJM1oM_b209872c"
-    status_code: 200
+    status_code: [200, 404]
   register: prometheus_datasource_check
   ignore_errors: yes
 
