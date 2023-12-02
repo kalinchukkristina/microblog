@@ -1,0 +1,81 @@
+- name: Include Copy files
+  include_tasks: copy_files.yml
+
+- name: Create a network for Monitoring
+  docker_network:
+      name: monitoring_network
+      state: present
+
+- name: Stop and remove old containers
+  docker_container:
+      name: "{{ item }}"
+      state: absent
+  loop:
+      - prometheus
+      - grafana
+      - alertmanager
+
+- name: Create Prometheus data volume
+  docker_volume:
+      name: prometheus-data
+
+- name: Create Grafana data volume
+  docker_volume:
+      name: grafana-data
+
+
+- name: Start Prometheus container
+  docker_container:
+      name: prometheus
+      image: prom/prometheus
+      volumes:
+          - /prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+          - /prometheus/rules.yml:/etc/prometheus/rules.yml
+          - prometheus-data:/prometheus
+      command:
+          - "--config.file=/etc/prometheus/prometheus.yml"
+          - "--storage.tsdb.path=/prometheus"
+          - "--web.console.libraries=/etc/prometheus/console_libraries"
+          - "--web.console.templates=/etc/prometheus/consoles"
+          - "--storage.tsdb.retention.time=24h"
+          - "--web.enable-lifecycle"
+      ports:
+          - "9090:9090"
+      networks:
+          - name: monitoring_network
+      restart_policy: always
+      state: started
+
+- name: Start Grafana container
+  docker_container:
+      name: grafana
+      image: grafana/grafana
+      volumes:
+          - grafana-data:/var/lib/grafana
+          - /home/deploy/grafana.ini:/etc/grafana/grafana.ini
+      ports:
+          - "3000:3000"
+      networks:
+          - name: monitoring_network
+      restart_policy: always
+      state: started
+
+- name: Start Alertmanager container
+  docker_container:
+      name: alertmanager
+      image: prom/alertmanager
+      volumes:
+          - "/prometheus/alertmanager.yml:/config/alermanager.yml"
+      ports:
+          - "9093:9093"
+      command: --config.file=/config/alermanager.yml
+      networks:
+          - name: monitoring_network
+      restart_policy: always
+      state: started
+
+- name: Include prometheus as datasource
+  include_tasks: prometheus_datasource.yml
+
+- name: Include dashboards
+  include_tasks: dashboards.yml
