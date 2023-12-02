@@ -1,36 +1,12 @@
+- name: Include Copy files
+  include_tasks: copy_files.yml
+
 - name: Create a network for Monitoring
   docker_network:
       name: monitoring_network
       state: present
 
-- name: Create directory for Prometheus configuration
-  file:
-      path: /prometheus
-      state: directory
-
-- name: Create directory for Prometheus data
-  file:
-      path: /prometheus-data
-      state: directory
-
-- name: Copy Prometheus configuration file to the server
-  copy:
-      src: files/prometheus.yml
-      dest: /prometheus/prometheus.yml
-      mode: 0644
-
-- name: Copy Alertmanager rules file to the server
-  copy:
-      src: files/rules.yml
-      dest: /prometheus/rules.yml
-      mode: 0644
-
-- name: Copy Alertmanager config to VM
-  copy:
-      src: files/alertmanager.yml
-      dest: /prometheus/alertmanager.yml
-
-- name: Stop and remove containers
+- name: Stop and remove old containers
   docker_container:
       name: "{{ item }}"
       state: absent
@@ -47,25 +23,6 @@
   docker_volume:
       name: grafana-data
 
-- name: Flask Dash Json To VM
-  copy:
-      src: files/flask_dash.json
-      dest: /home/deploy/flask_dash.json
-
-- name: Node Dash Json To VM
-  copy:
-      src: files/node_dash.json
-      dest: /home/deploy/node_dash.json
-
-- name: Nginx Dash Json To VM
-  copy:
-      src: files/nginx_dash.json
-      dest: /home/deploy/nginx_dash.json
-
-- name: Copy Grafana.ini Inside Of VM
-  copy:
-      src: files/grafana.ini
-      dest: /home/deploy/grafana.ini
 
 - name: Start Prometheus container
   docker_container:
@@ -117,52 +74,8 @@
       restart_policy: always
       state: started
 
-- name: Check if Prometheus data source exists
-  uri:
-    url: "http://0.0.0.0:3000/api/datasources/name/prometheus"
-    method: GET
-    user: "admin"
-    password: "admin"
-    headers:
-      Authorization: "Bearer glsa_zFWsnO6oyIxOxd7JnnnDedmbJLiJM1oM_b209872c"
-    status_code: [200, 404]
-  register: prometheus_datasource_check
-  ignore_errors: yes
+- name: Include prometheus as datasource
+  include_tasks: prometheus_datasource.yml
 
-- name: Prometheus as data source
-  community.grafana.grafana_datasource:
-      name: prometheus
-      url: "http://0.0.0.0:3000"
-      ds_type: "prometheus"
-      ds_url: http://prometheus:9090
-      grafana_user: "admin"
-      grafana_password: "admin"
-      state: present
-  when: prometheus_datasource_check.status != 200
-
-- name: Flask Dashboard
-  community.grafana.grafana_dashboard:
-      grafana_url: "http://0.0.0.0:3000"
-      grafana_user: "admin"
-      grafana_password: "admin"
-      path: /home/deploy/flask_dash.json
-      overwrite: true
-      state: present
-
-- name: Nginx Dashboards
-  community.grafana.grafana_dashboard:
-      grafana_url: "http://0.0.0.0:3000"
-      grafana_user: "admin"
-      grafana_password: "admin"
-      path: /home/deploy/nginx_dash.json
-      overwrite: true
-      state: present
-
-- name: Node Exporter Dashboard
-  community.grafana.grafana_dashboard:
-      grafana_url: "http://0.0.0.0:3000"
-      grafana_user: "admin"
-      grafana_password: "admin"
-      path: /home/deploy/node_dash.json
-      overwrite: true
-      state: present
+- name: Include dashboards
+  include_tasks: dashboards.yml
