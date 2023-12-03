@@ -1,3 +1,7 @@
+- name: Include Encrypted Variables
+  include_vars:
+    file: roles/monitoring-installation/vars/grafana_credentials.yml
+
 - name: Include Copy files
   include_tasks: copy_files.yml
 

@@ -2,8 +2,6 @@
   uri:
     url: "http://0.0.0.0:3000/api/datasources/name/prometheus"
     method: GET
-    user: "admin"
-    password: "admin"
     headers:
       Authorization: "Bearer glsa_zFWsnO6oyIxOxd7JnnnDedmbJLiJM1oM_b209872c"
     status_code: [200, 404]
@@ -17,7 +15,7 @@
       url: "http://0.0.0.0:3000"
       ds_type: "prometheus"
       ds_url: http://prometheus:9090
-      grafana_user: "admin"
-      grafana_password: "admin"
+      grafana_user: "{{ grafana_user }}"
+      grafana_password: "{{ grafana_password }}"
       state: present
   when: prometheus_datasource_check.status != 200
