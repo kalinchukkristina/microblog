@@ -1,5 +1,5 @@
 clients:
-  - url: http://74.234.102.17:3100/loki/api/v1/push
+  - url: 'http://{{ groups["monitoring"][0] }}:3100/loki/api/v1/push'
 
 positions:
   filename: /var/lib/promtail/positions.yaml
@@ -10,13 +10,13 @@ scrape_configs:
       - targets:
           - localhost
         labels:
-          job: nginx
+          job: nginx-access
           __path__: /var/log/nginx/access.log
 
-  - job_name: varlogs
+  - job_name: nginx-error-logs
     static_configs:
       - targets:
           - localhost
         labels:
-          job: varlogs
-          __path__: /var/log/*.log
+          job: nginx-error
+          __path__: /var/log/nginx/error.log

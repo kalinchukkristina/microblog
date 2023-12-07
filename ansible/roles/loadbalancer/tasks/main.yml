@@ -62,7 +62,7 @@
       state: directory
 
 - name: Copy promtail config file to the server
-  copy:
+  template:
       src: files/promtail-config.yml
       dest: /promtail/promtail-config.yml
       mode: 0644
