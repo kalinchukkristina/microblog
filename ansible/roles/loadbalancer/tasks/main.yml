@@ -55,3 +55,25 @@
       nginx_ssl_verify: "false"
       web_telemetry_path: "/prometheus"
     command: "--nginx.scrape-uri=https://{{ domain_name }}/metrics --nginx.retries=10 --nginx.ssl-verify=false --web.telemetry-path=/prometheus"
+
+- name: Create directory for Promtail configuration
+  file:
+      path: /promtail
+      state: directory
+
+- name: Copy promtail config file to the server
+  template:
+      src: files/promtail-config.yml
+      dest: /promtail/promtail-config.yml
+      mode: 0644
+
+- name: Start Promtail container
+  docker_container:
+    name: promtail
+    image: grafana/promtail:latest
+    volumes:
+      - /promtail/promtail-config.yml:/etc/promtail/config.yml
+      - /var/log:/var/log
+    detach: true
+    restart_policy: always
+    state: started

@@ -5,6 +5,13 @@
 - name: Include Copy files
   include_tasks: copy_files.yml
 
+- name: Stop and remove Loki container
+  docker_container:
+      name: "{{ item }}"
+      state: absent
+  loop:
+      - loki
+
 - name: Create a network for Monitoring
   docker_network:
       name: monitoring_network
@@ -73,6 +80,25 @@
       ports:
           - "9093:9093"
       command: --config.file=/config/alermanager.yml
+      networks:
+          - name: monitoring_network
+      restart_policy: always
+      state: started
+
+- name: Create Loki data volume
+  docker_volume:
+      name: loki-data
+
+- name: Start Loki container
+  docker_container:
+      name: loki
+      image: grafana/loki
+      volumes:
+        - /loki/loki-config.yml:/etc/loki/local-config.yaml
+        - loki-data:/loki
+      ports:
+        - "3100:3100"
+      command: -config.file=/etc/loki/local-config.yaml
       networks:
           - name: monitoring_network
       restart_policy: always

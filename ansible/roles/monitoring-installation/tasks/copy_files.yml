@@ -1,46 +1,57 @@
-- name: Create directory for Prometheus configuration
+# - name: Create directory for Prometheus configuration
+#   file:
+#       path: /prometheus
+#       state: directory
+
+- name: Create directory for Loki configuration
   file:
-      path: /prometheus
+      path: /loki
       state: directory
 
-- name: Create directory for Prometheus data
-  file:
-      path: /prometheus-data
-      state: directory
+# - name: Create directory for Prometheus data
+#   file:
+#       path: /prometheus-data
+#       state: directory
 
-- name: Copy Prometheus configuration file to the server
+# - name: Copy Prometheus configuration file to the server
+#   copy:
+#       src: files/prometheus.yml
+#       dest: /prometheus/prometheus.yml
+#       mode: 0644
+
+- name: Copy Loki configuration file to the server
   copy:
-      src: files/prometheus.yml
-      dest: /prometheus/prometheus.yml
+      src: files/loki-config.yml
+      dest: /loki/loki-config.yml
       mode: 0644
 
-- name: Copy Alertmanager rules file to the server
-  copy:
-      src: files/rules.yml
-      dest: /prometheus/rules.yml
-      mode: 0644
+# - name: Copy Alertmanager rules file to the server
+#   copy:
+#       src: files/rules.yml
+#       dest: /prometheus/rules.yml
+#       mode: 0644
 
-- name: Copy Alertmanager config file to the server
-  copy:
-      src: files/alertmanager.yml
-      dest: /prometheus/alertmanager.yml
+# - name: Copy Alertmanager config file to the server
+#   copy:
+#       src: files/alertmanager.yml
+#       dest: /prometheus/alertmanager.yml
 
-- name: Node dashboard json file to the server
-  copy:
-      src: files/dashboards/node_dash.json
-      dest: /home/deploy/node_dash.json
+# - name: Node dashboard json file to the server
+#   copy:
+#       src: files/dashboards/node_dash.json
+#       dest: /home/deploy/node_dash.json
 
-- name: Nginx dashboard json file to the server
-  copy:
-      src: files/dashboards/nginx_dash.json
-      dest: /home/deploy/nginx_dash.json
+# - name: Nginx dashboard json file to the server
+#   copy:
+#       src: files/dashboards/nginx_dash.json
+#       dest: /home/deploy/nginx_dash.json
 
-- name: Flask dashboard json file to the server
-  copy:
-      src: files/dashboards/flask_dash.json
-      dest: /home/deploy/flask_dash.json
+# - name: Flask dashboard json file to the server
+#   copy:
+#       src: files/dashboards/flask_dash.json
+#       dest: /home/deploy/flask_dash.json
 
-- name: Copy Grafana.ini to the server
-  copy:
-      src: files/grafana.ini
-      dest: /home/deploy/grafana.ini
+# - name: Copy Grafana.ini to the server
+#   copy:
+#       src: files/grafana.ini
+#       dest: /home/deploy/grafana.ini
