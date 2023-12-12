@@ -21,4 +21,4 @@ spec:
         - containerPort: 5000
         env:
         - name: DATABASE_URL
-          value: "mysql+pymysql://microblog:G5Evdo1IqgVNl51@mysql/microblog"
+          value: "mysql+pymysql://microblog:micropassw@mysql/microblog"
